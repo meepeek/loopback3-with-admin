@@ -7664,6 +7664,13 @@ ra-core@^2.2.0:
     reselect "~3.0.0"
     warning "~3.0.0"
 
+ra-data-json-server@latest:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/ra-data-json-server/-/ra-data-json-server-2.2.0.tgz#fb4265ad6a12c65d7c544fc0a88253f532e936b6"
+  dependencies:
+    query-string "~5.1.1"
+    react-admin "^2.2.0"
+
 ra-language-english@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/ra-language-english/-/ra-language-english-2.2.0.tgz#ec8e24170f8f39f87d9974110f66329bdfcb9ea6"
