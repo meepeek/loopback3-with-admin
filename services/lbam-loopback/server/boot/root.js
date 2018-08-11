@@ -13,7 +13,7 @@ module.exports = function(server) {
       password
     }, 'user', function(err, token) {
       if (err) {
-        res.status(400).send(JSON.stringify({ message: 'Username or password was not correct' }))
+        res.status(401).send(JSON.stringify({ message: 'Username or password was not correct' }))
         return;
       }
 
