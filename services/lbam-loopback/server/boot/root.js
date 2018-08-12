@@ -8,7 +8,7 @@ module.exports = function(server) {
   server.post('/login', function(req, res) {
     const {username, password} = req.body
     const email = username
-    server.models.User.login({
+    server.models.SystemUser.login({
       email,
       password
     }, 'user', function(err, token) {
@@ -26,7 +26,7 @@ module.exports = function(server) {
     const token = req.body.token
     if (!token) return res.sendStatus(401); //return 401:unauthorized if accessToken is not present
     else
-    server.models.User.logout(token, function(err) {
+    server.models.SystemUser.logout(token, function(err) {
       if (err) return next(err);
     });
     res.sendStatus(204)

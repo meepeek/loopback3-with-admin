@@ -1,10 +1,10 @@
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'react-admin'
 
-export default (loginApiUrl, noAccessPage = '/login') => {
+export default (apiUrl) => {
 
     return (type, params) => {
         if (type === AUTH_LOGIN) {
-            const request = new Request(loginApiUrl, {
+            const request = new Request(apiUrl + '/login', {
                 method: 'POST',
                 body: JSON.stringify(params),
                 headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -21,7 +21,14 @@ export default (loginApiUrl, noAccessPage = '/login') => {
                 });
         }
         if (type === AUTH_LOGOUT) {
-            localStorage.removeItem('lbtoken');
+          const token = localStorage.getItem('lbtoken');
+          localStorage.removeItem('lbtoken');
+          const request = new Request(apiUrl + '/logout', {
+              method: 'POST',
+              body: JSON.stringify({token}),
+              headers: new Headers({ 'Content-Type': 'application/json' }),
+          });
+          return fetch(request)
             return Promise.resolve();
         }
         if (type === AUTH_ERROR) {
@@ -38,7 +45,7 @@ export default (loginApiUrl, noAccessPage = '/login') => {
                 return Promise.resolve();
             } else {
                 localStorage.removeItem('lbtoken');
-                return Promise.reject({ redirectTo: noAccessPage });
+                return Promise.reject({ redirectTo: apiUrl + '/login' });
             }
         }
         return Promise.reject('Unknown method');

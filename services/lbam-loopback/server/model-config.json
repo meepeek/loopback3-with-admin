@@ -34,5 +34,16 @@
   "Role": {
     "dataSource": "db",
     "public": true
+  },
+  "SystemUser": {
+    "dataSource": "db",
+    "public": true,
+    "options": {
+         "strictObjectIDCoercion": true
+    }
+  },
+  "SystemToken": {
+    "dataSource": "db",
+    "public": true
   }
 }
