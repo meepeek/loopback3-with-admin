@@ -9,7 +9,7 @@
     "react-dom": "^16.4.2",
     "react-scripts": "1.1.4",
     "ra-data-json-server": "latest",
-    "aor-loopback": "latest"
+    "aor-loopback": "1.3.3"
   },
   "scripts": {
     "start": "react-scripts start",

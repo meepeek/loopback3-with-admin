@@ -7,6 +7,8 @@ import {
     CREATE,
     UPDATE,
     DELETE,
+    DELETE_MANY,
+    UPDATE_MANY
 } from './types';
 export * from './authClient';
 
@@ -131,6 +133,32 @@ export default (apiUrl, httpClient = fetchJson) => {
      * @returns {Promise} the Promise for a REST response
      */
     return (type, resource, params) => {
+
+        if (type === UPDATE_MANY) {
+            return Promise.all(
+                params.ids.map(id =>
+                    httpClient(`${apiUrl}/${resource}/${id}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify(params.data),
+                    })
+                )
+            ).then(responses => ({
+                data: responses.map(response => response.json),
+            }));
+        }
+        // json-server doesn't handle filters on DELETE route, so we fallback to calling DELETE n times instead
+        if (type === DELETE_MANY) {
+            return Promise.all(
+                params.ids.map(id =>
+                    httpClient(`${apiUrl}/${resource}/${id}`, {
+                        method: 'DELETE',
+                    })
+                )
+            ).then(responses => ({
+                data: responses.map(response => response.json),
+            }));
+        }
+
         const {url, options} = convertRESTRequestToHTTP(type, resource, params);
         return httpClient(url, options)
             .then(response => convertHTTPResponseToREST(response, type, resource, params));

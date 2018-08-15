@@ -1,7 +1,6 @@
 import storage from './storage';
 
 export const authClient = (loginApiUrl, noAccessPage = '/login') => {
-
     return (type, params) => {
         if (type === 'AUTH_LOGIN') {
             const request = new Request(loginApiUrl, {
@@ -16,8 +15,8 @@ export const authClient = (loginApiUrl, noAccessPage = '/login') => {
                     }
                     return response.json();
                 })
-                .then(({ ttl, ...data }) => {
-                    storage.save('lbtoken', data, ttl);
+                .then(({ token, ...data }) => {
+                    storage.save('lbtoken', token);
                 });
         }
         if (type === 'AUTH_LOGOUT') {

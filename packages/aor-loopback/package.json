@@ -1,6 +1,6 @@
 {
   "name": "aor-loopback",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Loopback-style REST Client for Admin-on-rest, the frontend framework for building admin applications on top of REST services",
   "main": "lib/index.js",
   "scripts": {
@@ -12,6 +12,9 @@
     "lib",
     "src"
   ],
+  "dependencies": {
+    "react-admin": "^2.2.0"
+  },
   "devDependencies": {
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.1",

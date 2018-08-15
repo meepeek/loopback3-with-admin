@@ -16,7 +16,6 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 var authClient = function authClient(loginApiUrl) {
     var noAccessPage = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '/login';
 
-
     return function (type, params) {
         if (type === 'AUTH_LOGIN') {
             var request = new Request(loginApiUrl, {
@@ -30,10 +29,10 @@ var authClient = function authClient(loginApiUrl) {
                 }
                 return response.json();
             }).then(function (_ref) {
-                var ttl = _ref.ttl,
-                    data = _objectWithoutProperties(_ref, ['ttl']);
+                var token = _ref.token,
+                    data = _objectWithoutProperties(_ref, ['token']);
 
-                _storage2.default.save('lbtoken', data, ttl);
+                _storage2.default.save('lbtoken', token);
             });
         }
         if (type === 'AUTH_LOGOUT') {
@@ -41,8 +40,7 @@ var authClient = function authClient(loginApiUrl) {
             return Promise.resolve();
         }
         if (type === 'AUTH_ERROR') {
-            var status = params.status;
-
+            var status = params.message.status;
             if (status === 401 || status === 403) {
                 _storage2.default.remove('lbtoken');
                 return Promise.reject();

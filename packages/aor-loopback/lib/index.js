@@ -160,6 +160,36 @@ exports.default = function (apiUrl) {
      * @returns {Promise} the Promise for a REST response
      */
     return function (type, resource, params) {
+
+        if (type === _types.UPDATE_MANY) {
+            return Promise.all(params.ids.map(function (id) {
+                return httpClient(apiUrl + '/' + resource + '/' + id, {
+                    method: 'PATCH',
+                    body: JSON.stringify(params.data)
+                });
+            })).then(function (responses) {
+                return {
+                    data: responses.map(function (response) {
+                        return response.json;
+                    })
+                };
+            });
+        }
+        // json-server doesn't handle filters on DELETE route, so we fallback to calling DELETE n times instead
+        if (type === _types.DELETE_MANY) {
+            return Promise.all(params.ids.map(function (id) {
+                return httpClient(apiUrl + '/' + resource + '/' + id, {
+                    method: 'DELETE'
+                });
+            })).then(function (responses) {
+                return {
+                    data: responses.map(function (response) {
+                        return response.json;
+                    })
+                };
+            });
+        }
+
         var _convertRESTRequestTo = convertRESTRequestToHTTP(type, resource, params),
             url = _convertRESTRequestTo.url,
             options = _convertRESTRequestTo.options;
