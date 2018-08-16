@@ -10,9 +10,15 @@ import loopbackRestClient, {authClient} from 'aor-loopback'
 const dataProvider = loopbackRestClient('http://localhost:3333/api');
 const App = () => (
     <Admin dataProvider={dataProvider} authProvider={authClient('http://localhost:3333/login')}>
-      <Resource name="SystemUsers" options={{label: "System Users"}} list={SystemUsers.list} create={SystemUsers.create} edit={SystemUsers.edit} />
-      <Resource name="RoleMappings" options={{label: "Role Assignment"}} list={RoleMappings.list} create={RoleMappings.create} edit={RoleMappings.edit} />
-      <Resource name="Roles" list={Roles.list} create={Roles.create} edit={Roles.edit} />
+      <Resource name="SystemUsers" options={{label: "System Users"}}
+        list={SystemUsers.list} create={SystemUsers.create}
+        edit={SystemUsers.edit} show={SystemUsers.show} />
+      <Resource name="RoleMappings" options={{label: "Role Assignment"}}
+        list={RoleMappings.list} create={RoleMappings.create}
+        edit={RoleMappings.edit} show={RoleMappings.show} />
+      <Resource name="Roles"
+        list={Roles.list} create={Roles.create}
+        edit={Roles.edit} show={Roles.show} />
     </Admin>
 );
 

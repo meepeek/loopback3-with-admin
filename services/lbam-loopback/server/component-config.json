@@ -7,5 +7,11 @@
     "pattern": [
       "*.find"
     ]
+  },
+  "loopback-graphql-server": {
+    "path": "/graphql",
+    "graphiqlPath": "/graphiql",
+    "modelMutationGroups": false,
+    "modelQueryGroups": true
   }
 }

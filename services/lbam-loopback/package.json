@@ -22,7 +22,8 @@
     "serve-favicon": "^2.0.1",
     "strong-error-handler": "^3.0.0",
     "loopback3-xtotalcount": "latest",
-    "bcrypt": "latest"
+    "bcrypt": "latest",
+    "loopback-graphql-server": "latest"
   },
   "devDependencies": {
     "eslint": "^3.17.1",

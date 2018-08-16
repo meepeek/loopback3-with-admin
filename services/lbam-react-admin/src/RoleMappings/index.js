@@ -10,7 +10,9 @@ import {
     TextInput,
     EditButton,
     ReferenceField,
-    ReferenceInput
+    ReferenceInput,
+    Show,
+    SimpleShowLayout
 } from 'react-admin';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Icon from '@material-ui/icons/Person';
@@ -44,24 +46,9 @@ const list = withStyles(listStyles)(({ classes, ...props }) => (
     </List>
 ));
 
-const editStyles = {
-    first_name: { display: 'inline-block' },
-    last_name: { display: 'inline-block', marginLeft: 32 },
-    email: { width: 544 },
-    address: { maxWidth: 544 },
-    zipcode: { display: 'inline-block' },
-    city: { display: 'inline-block', marginLeft: 32 },
-    comment: {
-        maxWidth: '20em',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-    },
-};
-
-const create = withStyles(editStyles)(({ classes, record, ...props }) => (
+const create = ({ classes, record, ...props }) => (
   <Create title={<Title />} {...props}>
-    <SimpleForm>
+    <SimpleForm redirect="list">
         <SelectInput
             source="principalType"
             choices={[
@@ -78,9 +65,9 @@ const create = withStyles(editStyles)(({ classes, record, ...props }) => (
         </ReferenceInput>
     </SimpleForm>
   </Create>
-));
+);
 
-const edit = withStyles(editStyles)(({ classes, record, ...props }) => (
+const edit = ({ classes, record, ...props }) => (
   <Edit title={<Title />} {...props}>
     <SimpleForm>
         <SelectInput
@@ -99,10 +86,26 @@ const edit = withStyles(editStyles)(({ classes, record, ...props }) => (
         </ReferenceInput>
     </SimpleForm>
   </Edit>
-));
+);
+
+const show = ({ classes, ...props }) => (
+  <Show {...props} >
+    <SimpleShowLayout>
+      <TextField source="id" />
+      <TextField source="principalType" />
+      <ReferenceField label="Principal" reference="SystemUsers" source="principalId">
+        <TextField source="email" />
+      </ReferenceField>
+      <ReferenceField label="Role" reference="Roles" source="roleId">
+        <TextField source="name" />
+      </ReferenceField>
+    </SimpleShowLayout>
+  </Show>
+);
 
 export default {
   list,
   create,
-  edit
+  edit,
+  show
 }

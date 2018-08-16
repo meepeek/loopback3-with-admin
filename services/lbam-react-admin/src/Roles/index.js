@@ -10,7 +10,9 @@ import {
   TextInput,
   EditButton,
   ReferenceField,
-  ReferenceInput
+  ReferenceInput,
+  Show,
+  SimpleShowLayout
 } from 'react-admin';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Icon from '@material-ui/icons/Person';
@@ -35,7 +37,7 @@ const list = ({ classes, ...props }) => (
 
 const create = ({ classes, ...props }) => (
     <Create {...props}>
-      <SimpleForm>
+      <SimpleForm redirect="show">
         <TextInput source="name" />
       </SimpleForm>
     </Create>
@@ -50,8 +52,18 @@ const edit = ({ classes, ...props }) => (
   </Edit>
 );
 
+const show = ({ classes, ...props }) => (
+  <Show {...props} >
+    <SimpleShowLayout>
+      <TextField source="id" />
+      <TextField source="name" />
+    </SimpleShowLayout>
+  </Show>
+);
+
 export default {
   list,
   create,
-  edit
+  edit,
+  show
 }
