@@ -1,13 +1,13 @@
 {
-  "memory": {
-    "name": "memory",
+  "db": {
+    "name": "db",
     "connector": "memory"
   },
-  "db": {
+  "mongo": {
     "host": "localhost",
     "port": 27017,
     "database": "data",
-    "name": "db",
+    "name": "mongo",
     "user": "me",
     "connector": "mongodb"
   }
