@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 
+import Button from 'antd/lib/button';
+
 @inject('store')
 @observer
 export default class Home extends Component {
@@ -17,7 +19,7 @@ export default class Home extends Component {
 					<div className='boilerplate-logo' />
 
 					<h1>React MobX React-Router Boilerplate</h1>
-
+<Button type="primary">Button</Button>
           <p>A simple starting point for your React project with routing, data-fetching and state management!</p>
 
 					<div>
