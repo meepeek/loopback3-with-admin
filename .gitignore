@@ -6,3 +6,5 @@ node_modules/
 lerna-debug\.log
 
 yarn\.lock
+
+services/lbam-base-app/dist/

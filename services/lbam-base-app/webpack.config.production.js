@@ -1,43 +1,32 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-  entry: [
-    'react-hot-loader/patch',
-    'webpack-dev-server/client?http://0.0.0.0:1337',
-    'webpack/hot/only-dev-server',
-    'babel-polyfill',
-    'whatwg-fetch',
-    './src/index.js'
-  ],
-  devServer: {
-    hot: true,
-    contentBase: path.resolve(__dirname, 'dist'),
-    port: process.env.PORT || 1337,
-    host: '0.0.0.0',
-    publicPath: '/',
-    historyApiFallback: true,
-    disableHostCheck: true
+  entry: {
+    vendor: ['react', 'react-dom', 'react-router'],
+    app: ['babel-polyfill', './src/index.js']
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    publicPath: '/',
-    filename: 'app.[hash].js'
+    publicPath: './',
+    filename: 'assets/[name].[hash].js',
+    chunkFilename: 'assets/[name].[chunkhash].js'
   },
-  devtool: 'eval',
+  devtool: 'cheap-module-source-map',
   module: {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        include: path.join(__dirname, 'src'),
         loader: 'babel-loader',
-        options: {
+        query: {
           presets: [
             [
               'es2015',
               {
-                'modules': false
+                modules: false
               }
             ],
             'stage-0',
@@ -50,13 +39,13 @@ module.exports = {
         }
       },
       {
-        test: /\.scss|css$/,
+        test: /\.scss|css$/i,
         use: [
-          'style-loader',
-          'css-loader',
-          'postcss-loader',
-          'resolve-url-loader',
-          'sass-loader?sourceMap'
+          MiniCssExtractPlugin.loader,
+          { loader: 'css-loader', options: { sourceMap: true } },
+          { loader: 'postcss-loader', options: { sourceMap: true } },
+          { loader: 'resolve-url-loader' },
+          { loader: 'sass-loader', options: { sourceMap: true } }
         ]
       },
       {
@@ -89,15 +78,27 @@ module.exports = {
       },
       {
         test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        use: 'file-loader',
-        exclude: /images/,
+        use: 'file-loader'
       }
     ]
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production')
+      }
+    }),
     new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new HtmlWebpackPlugin({ hash: false, template: './index.hbs' }),
-    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /nb/)
+    new webpack.optimize.OccurrenceOrderPlugin(true),
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: 'assets/styles.css',
+      chunkFilename: '[id].css'
+    }),
+    new HtmlWebpackPlugin({
+      hash: false,
+      template: './index.hbs'
+    })
   ]
 };
