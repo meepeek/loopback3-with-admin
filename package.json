@@ -2,17 +2,21 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "test": "lerna run test",
-    "prepare": "lerna run prepare",
-    "clean": "rimraf packages/**/lib"
+    "start": "lerna run start --stream",
+    "clean": "yarn clean-logs && rm -fr node_modules && rm -fr packages/*/node_modules && rm -fr services/*/node_modules && rm -f yarn.lock && rm -fr */**/yarn.lock",
+    "clean-logs": "rm -f .DS_Store && rm -fr */**/.DS_Store && rm -fr */.DS_Store && rm -f *.log && rm -fr */**/*.log"
   },
   "devDependencies": {
-    "lerna": "^3.0.0-rc.0"
+    "lerna": "^3.2.1"
   },
   "dependencies": {},
-  "workspaces": [
-    "packages/*",
-    "services/*"
-  ]
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "services/*"
+    ],
+    "nohoist": [
+      "**/nohoist-*/**"
+    ]
+  }
 }
