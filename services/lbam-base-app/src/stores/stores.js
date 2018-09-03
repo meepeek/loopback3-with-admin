@@ -1,7 +1,13 @@
 import { store } from 'rfx-core';
 
-import AppState from './AppState';
+import appState from './AppState';
+import auth from './Auth'
 
-export default store.setup({
-	appState: AppState
+const rootStore = store.setup({
+	appState,
+	auth
 });
+
+window.rootStore = rootStore
+
+export default rootStore
