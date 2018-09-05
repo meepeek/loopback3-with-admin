@@ -10,22 +10,58 @@ const AutoCompleteOption = AutoComplete.Option;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
+@inject('store')
+@observer
 @Form.create()
 export default class Signup extends React.Component {
+  state = {
+    confirmDirty: false
+  };
+
+  handleConfirmBlur = (e) => {
+    const value = e.target.value;
+    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
+  }
+  validateToNextPassword = (rule, value, callback) => {
+    const form = this.props.form;
+    if (value && this.state.confirmDirty) {
+      form.validateFields(['signup.confirm'], { force: true });
+    }
+    callback();
+  }
+  compareToFirstPassword = (rule, value, callback) => {
+    const form = this.props.form;
+    if (value && value !== form.getFieldValue('signup.password')) {
+      callback('Two passwords that you enter is inconsistent!');
+    } else {
+      callback();
+    }
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        let payload = values.signup
+        payload.birthdate = payload.birthdate.format('YYYY-MM-DD')
+        this.props.store.auth.signup(payload)
+      }
+    });
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const auth = this.props.store.auth
+    const formData = this.props.store.auth.formData
 
     return (
-      <Form>
+      <Form onSubmit={this.handleSubmit}>
       <FormItem
         label="Name"
       >
         {getFieldDecorator('signup.name', {
           rules: [{
             required: true, message: 'Your name is required',
-          }, {
-            validator: this.validateToNextPassword,
           }],
         })(
           <Input type="text" />
@@ -37,8 +73,6 @@ export default class Signup extends React.Component {
         {getFieldDecorator('signup.surname', {
           rules: [{
             required: true, message: 'Your surname is required',
-          }, {
-            validator: this.validateToNextPassword,
           }],
         })(
           <Input type="text" />
@@ -75,9 +109,9 @@ export default class Signup extends React.Component {
         >
           {getFieldDecorator('signup.email', {
             rules: [{
+              type: 'email', message: 'The input is not valid E-mail!'
+            },{
               required: true, message: 'Your email is required for login',
-            }, {
-              validator: this.validateToNextPassword,
             }],
           })(
             <Input type="text" />
@@ -90,6 +124,9 @@ export default class Signup extends React.Component {
             rules: [{
               required: true,
               message: 'Please input new password!',
+            }, {
+              min: 5, max: 40,
+              message: 'Password length must be 5-40 characters'
             }, {
               validator: this.validateToNextPassword,
             }],
@@ -111,7 +148,7 @@ export default class Signup extends React.Component {
             <Input type="password" onBlur={this.handleConfirmBlur} />
           )}
         </FormItem>
-        <Button block type="primary">Submit</Button>
+        <Button block type="primary" htmlType="submit" >Submit</Button>
 
       </Form>
     );

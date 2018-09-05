@@ -1,12 +1,10 @@
-import { observable, action } from 'mobx';
+import { observable, action, toJS } from 'mobx';
 import axios from 'axios'
 
 const url = 'http://localhost:3333'
 
 export default class Auth {
   @observable status
-  @observable formData
-  @observable remoteData
 
   constructor() {
     this.status = {
@@ -14,26 +12,28 @@ export default class Auth {
       loginFail: false,
       wait: false
     }
-    this.formData = {}
-    this.formData.login = {
-      username: '',
-      password: ''
-    }
+
     const token = localStorage.getItem('meepeekToken')
     if (token) this.load(token)
   }
 
-  @action formUpdate = (formName, field, value) => {
-    this.formData[formName][field] = value
-  }
   @action load = (token) => {
     this.token = token
     this.status.loginFail = false
     this.status.loginPass = true
   }
-  @action login = async () => {
+  @action signup = async (payload) => {
     this.status.wait = true
-    const payload = this.formData.login
+    const {error, data} = await axios.post( `${url}/signup`, payload )
+      .then( r => { return {error: false, data: r.data } } )
+      .catch(e => {return {error: true, data: e}})
+    if (error) ;
+    else {
+    }
+    this.status.wait = false
+  }
+  @action login = async (payload) => {
+    this.status.wait = true
     const {error, data} = await axios.post( `${url}/login`, payload )
       .then( r => { return {error: false, data: r.data } } )
       .catch(e => {return {error: true, data: e}})

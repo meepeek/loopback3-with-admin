@@ -26,8 +26,7 @@ export default class Auth extends React.Component {
           <Col xs={{span:22}} sm={{span:16}} md={{span:14}} lg={{span: 10}} xl={{span: 8}}>
             <Button block>Continue with Facebook</Button>
             <Divider>Or</Divider>
-            { this.switch &&
-              <div>
+              <div className={this.switch ? '' : 'hidden'}>
                 <Row type="flex" justify="space-around" align="middle">
                   <div>Already have account ?</div>
                 </Row>
@@ -35,10 +34,8 @@ export default class Auth extends React.Component {
                   <a href="#" onClick={this.toggle}>Sign in</a>
                 </Row>
               </div>
-            }
 
-            { !this.switch &&
-              <div>
+              <div className={!this.switch ? '' : 'hidden'}>
                 <Login />
                 <Row type="flex" justify="space-around" align="middle">
                   <div>Not a member ?</div>
@@ -47,11 +44,10 @@ export default class Auth extends React.Component {
                   <a href="#" onClick={this.toggle}>Sign up</a>
                 </Row>
               </div>
-            }
 
-            { this.switch &&
-              <Signup />
-            }
+              <div className={this.switch ? '' : 'hidden'}>
+                <Signup />
+              </div>
           </Col>
         </Row>
       </Spin>

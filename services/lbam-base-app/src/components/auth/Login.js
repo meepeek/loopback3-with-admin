@@ -10,30 +10,45 @@ const FormItem = Form.Item;
 @observer
 @Form.create()
 export default class Login extends React.Component {
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        let payload = values.login
+        payload.username = payload.email
+        this.props.store.auth.login(payload)
+      }
+    });
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const formData = this.props.store.auth.formData
     const auth = this.props.store.auth
     return (
       <div>
-        <Form className="login-form">
+        <Form className="login-form" onSubmit={this.handleSubmit}>
           <FormItem>
-            {getFieldDecorator('lgoin.username', {
-              rules: [{ required: true, message: 'Please input your username!' }],
+            {getFieldDecorator('login.email', {
+              rules: [
+                { required: true, message: 'Please input your email!' },
+                { type: 'email', message: 'The input is not valid E-mail!' }
+            ]
             })(
-              <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" onChange={e => auth.formUpdate('login', 'username', e.currentTarget.value)} />
+              <Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Email" />
             )}
           </FormItem>
           <FormItem>
             {getFieldDecorator('login.password', {
               rules: [{ required: true, message: 'Please input your Password!' }],
             })(
-              <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" onChange={e => auth.formUpdate('login', 'password', e.currentTarget.value)} />
+              <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
             )}
           </FormItem>
           <FormItem>
             <a className="login-form-forgot" href="">Forgot password</a><br/>
-            <Button block type="primary" htmlType="submit" className="login-form-button" onClick={auth.login}>
+            <Button block type="primary" className="login-form-button" htmlType="submit">
               Login
             </Button><br/>
           </FormItem>
