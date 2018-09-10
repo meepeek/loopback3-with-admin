@@ -23,7 +23,7 @@ const renderApp = Component => {
 	render(
 		<AppContainer>
 			<Router history={history}>
-				<Provider store={isProduction ? store : hotRehydrate()} routing={routeStore} >
+				<Provider history={history} store={isProduction ? store : hotRehydrate()} routing={routeStore} >
 					<App />
 				</Provider>
 			</Router>
