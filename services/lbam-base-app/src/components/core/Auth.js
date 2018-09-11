@@ -3,8 +3,8 @@ import { inject, observer } from 'mobx-react';
 import { Redirect } from 'react-router-dom';
 
 import { Form, Input, Icon, Row, Col, Button, Spin, Divider } from 'antd';
-import Login from './Login'
-import Signup from './Signup'
+import Login from '../form/Login'
+import Signup from '../form/Signup'
 
 const FormItem = Form.Item;
 

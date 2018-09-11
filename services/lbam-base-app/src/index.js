@@ -12,7 +12,7 @@ import stores from './stores/stores';
 
 import { RouterStore, syncHistoryWithStore } from 'mobx-react-router';
 import createBrowserHistory from 'history/createBrowserHistory';
-
+import formStore from './stores/Form'
 const store = rehydrate();
 
 const renderApp = Component => {
@@ -23,7 +23,7 @@ const renderApp = Component => {
 	render(
 		<AppContainer>
 			<Router history={history}>
-				<Provider history={history} store={isProduction ? store : hotRehydrate()} routing={routeStore} >
+				<Provider history={history} formStore={formStore} store={isProduction ? store : hotRehydrate()} routing={routeStore} >
 					<App />
 				</Provider>
 			</Router>

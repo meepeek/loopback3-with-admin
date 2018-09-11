@@ -13,8 +13,6 @@ const { Header, Content, Footer } = Layout;
 export default class App extends Component {
 	constructor(props) {
 		super(props);
-
-		this.store = this.props.store;
 	}
 
 	render() {
@@ -45,7 +43,7 @@ export default class App extends Component {
 						exact
 						path='/auth'
 						render={props => (
-							<LazyRoute {...props} component={import('./auth')} />
+							<LazyRoute {...props} component={import('./core/Auth')} />
 						)}
 					/>
 
@@ -54,14 +52,6 @@ export default class App extends Component {
 						path='/test'
 						render={props => (
 							<LazyRoute {...props} component={import('./UserProfileSetting')} />
-						)}
-					/>
-
-					<Route
-						exact
-						path='/'
-						render={props => (
-							<LazyRoute {...props} component={import('./core')} />
 						)}
 					/>
 
