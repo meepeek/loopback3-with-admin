@@ -19,7 +19,8 @@
     "verificationToken": "string"
   },
   "options": {
-    "caseSensitiveEmail": true
+    "caseSensitiveEmail": true,
+    "unique": true
   },
   "hidden": ["password", "verificationToken"],
   "acls": [
