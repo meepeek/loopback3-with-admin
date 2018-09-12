@@ -5,10 +5,11 @@ module.exports = function(server) {
   var router = server.loopback.Router();
   router.get('/', server.loopback.status());
 
+  const SystemUser = server.models.SystemUser
+
   server.post('/login', function(req, res) {
-    const {username, password} = req.body
-    const email = username
-    server.models.SystemUser.login({
+    const {email, password} = req.body
+    SystemUser.login({
       email,
       password
     }, 'user', function(err, token) {
@@ -22,14 +23,38 @@ module.exports = function(server) {
     });
   });
 
+  server.post('/signup', async function(req, res) {
+    const {email, password, birthdate, name, surname, gender} = req.body
+    await SystemUser.create( {email, password, birthdate, name, surname, gender} )
+      .then( r => {
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(r));
+      } )
+      .catch( e => {
+        console.log(e)
+        const {statusCode} = e
+        res.status(statusCode).send(JSON.stringify(e))
+      } )
+  });
+
   server.post('/logout', function(req, res, next) {
     const token = req.body.token
     if (!token) return res.sendStatus(401); //return 401:unauthorized if accessToken is not present
     else
-    server.models.SystemUser.logout(token, function(err) {
+    SystemUser.logout(token, function(err) {
       if (err) return next(err);
     });
     res.sendStatus(204)
+  });
+
+  server.post('/checkEmail', async function(req, res) {
+    const {email} = req.body
+    const found = await SystemUser.findOne( {where: {email}} )
+    if (found) res.sendStatus(400)
+    else res.sendStatus(200)
+  });
+  server.post('/checkToken', async function(req, res) {
+    const {token} = req.body
   });
 
   server.use(router);

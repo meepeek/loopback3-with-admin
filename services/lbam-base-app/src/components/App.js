@@ -4,11 +4,13 @@ import { inject, observer } from 'mobx-react';
 import LazyRoute from 'lazy-route';
 import DevTools from 'mobx-react-devtools';
 
+import Auth from './core/Auth'
+
 import { Layout, Menu, Breadcrumb, Modal } from 'antd';
 
 const { Header, Content, Footer } = Layout;
 
-@inject('store', 'routing', 'history')
+@inject('store', 'routing', 'history', 'auth')
 @observer
 export default class App extends Component {
 	constructor(props) {
@@ -29,7 +31,7 @@ export default class App extends Component {
 		      >
 		        <Menu.Item key="1">nav 1</Menu.Item>
 		        <Menu.Item key="2">nav 2</Menu.Item>
-		        <Menu.Item className="float-right" key="3" onClick={() => this.props.history.push('/auth')}>Sign Up</Menu.Item>
+		        <Menu.Item className="float-right" key="3" onClick={this.props.auth.toggleVisible}>Sign Up</Menu.Item>
 		      </Menu>
 		    </Header>
 		    <Content style={{ padding: '0 50px' }}>
@@ -39,6 +41,7 @@ export default class App extends Component {
 		        <Breadcrumb.Item>App</Breadcrumb.Item>
 		      </Breadcrumb>
 		      <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+					<Auth />
 					<Route
 						exact
 						path='/auth'

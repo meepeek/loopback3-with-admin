@@ -1,94 +1,81 @@
 import { observable, action, toJS } from 'mobx';
 import axios from 'axios'
 
-const url = 'http://localhost:3333'
+const config = {
+  url: 'http://localhost:3333',
+  tokenName: 'meepeekToken'
+}
 
-export default class Auth {
-  @observable status
-  @observable formValue
-  @observable formState
+class Auth {
+  @observable state = {
+    authenticated: false,
+    visible: false,
+    showSignup: false
+  }
+  @observable data = {
+    clientId: null,
+    token: localStorage.getItem(config.tokenName)
+  }
 
   constructor() {
-    this.status = {
-      loginPass: false,
-      loginFail: false,
-      wait: false,
-      signupFail: false,
-    }
-    this.formValue = {
-      login: {
-        email: '',
-        password: ''
-      }
-    }
-    this.formState = {
-      login: {
-        email: {
-          validateStatus: '',
-          help: ''
-        },
-        password: {
-          validateStatus: '',
-          help: ''
-        }
-      }
-    }
-
-    const token = localStorage.getItem('meepeekToken')
-    if (token && token != 'undefined') this.load(token)
+    this.init()
   }
 
-  @action load = (token) => {
-    this.token = token
-    this.status.loginFail = false
-    this.status.loginPass = true
+  @action init = async () => {
+    if (this.data.token && await this.checkToken( this.data.token )) {
+      this.state.authenticated = true
+    } else {
+      this.data.token = null
+      localStorage.removeItem(config.tokenName)
+    }
   }
-  @action signup = async (payload) => {
-    this.status.wait = true
-    await axios.post( `${url}/signup`, payload )
-      .then( r => {
-        const {email, password} = payload
-        this.login({email, password})
-      } )
-      .catch(e => {
-        this.status.signupFail = true
-      })
-    this.status.wait = false
-  }
+  // register client and get clientId
+  @action register = async () => {}
   @action login = async (payload) => {
-    this.status.wait = true
-    await axios.post( `${url}/login`, payload )
+    await axios.post( `${config.url}/login`, payload )
       .then( r => {
         const {data} = r
-        localStorage.setItem('meepeekToken', data.token)
-        this.load(data.token)
+        localStorage.setItem(config.tokenName, data.token)
+        this.data.token = data.token
       } )
       .catch( e => {
-        this.status.loginFail = true
+        throw {message: 'Incorrect username or password'}
       } )
-    this.status.wait = false
   }
   @action logout = async () => {
     await this.post( 'SystemUsers/logout' ).catch( this.reportError )
-    this.token = null
-    localStorage.removeItem('meepeekToken')
-    this.status.loginPass = false
+    this.data.token = null
+    localStorage.removeItem(config.tokenName)
+    this.state.authenticated = false
+  }
+  @action signup = async (payload) => {
+    await axios.post( `${config.url}/signup`, payload )
+      .then( r => {
+        const {email, password} = payload
+        this.login({email, password})
+        this.state.visible = false
+        this.state.showSignup = false
+      } )
+      .catch(e => {
+        throw {message: 'Unable to signup, please try again'}
+      })
   }
   @action post = async (path, payload) => {
-    return await axios.post( `${url}/api/${path}?access_token=${this.token}`, payload )
+    return await axios.post( `${config.url}/api/${path}?access_token=${this.data.token}`, payload )
       .then( r => { return {error: false, data: r.data } } )
       .catch(e => {return {error: true, data: e}})
+  }
+  @action checkToken = async () => {
+    return true // currently not implemented
   }
   @action checkEmailExist = async (email) => {
     return await axios.post( `${url}/checkEmail`, {email} )
       .then( r => { return true } )
-      .catch(e => { return false })
+      .catch(e => { throw {message: 'Email already been used'} })
   }
-
-  // each client get a public uuid at startup, if user logn, switch to use account id to communicate with server
-  // expect server to reply on all requests, if the server does not, send report
-  @action getPublicId = async () => {}
-  @action reportError = async (e) => {
-    return {error: true }
-  }
+  @action toggleShowSignup = () => {this.state.showSignup = !this.state.showSignup}
+  @action toggleVisible = () => {this.state.visible = !this.state.visible}
 }
+
+const auth = new Auth()
+export default auth

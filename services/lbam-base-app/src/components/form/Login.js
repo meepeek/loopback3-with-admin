@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Redirect } from 'react-router-dom';
 
-import { Form, Input, Icon, Row, Col, Button } from 'antd';
+import { Form, Input, Icon, Row, Col, Button, Spin } from 'antd';
 
 import textInput from './formItem/textInput'
 
@@ -19,16 +19,20 @@ export default class Login extends React.Component {
     }
     return (
       <div>
-        <Form className="login-form" onSubmit={handleSubmit}>
-          {textInput({label: 'Email', field: 'email', icon: 'mail', store})}
-          {textInput({label: 'Password', field: 'password', icon: 'lock', store, type: 'password'})}
-          <FormItem>
-            <a className="login-form-forgot" href="">Forgot password</a><br/>
-            <Button block type="primary" className="login-form-button" htmlType="submit">
-              Login
-            </Button><br/>
-          </FormItem>
-        </Form>
+        <Spin tip="Loading..." spinning={store.state.wait}>
+
+          <Form className="login-form" onSubmit={handleSubmit}>
+            {textInput({label: 'Email', field: 'email', icon: 'mail', store})}
+            {textInput({label: 'Password', field: 'password', icon: 'lock', store, type: 'password'})}
+            <FormItem>
+              <a className="login-form-forgot" href="">Forgot password</a><br/>
+              <Button block type="primary" className="login-form-button" htmlType="submit">
+                Login
+              </Button><br/>
+            </FormItem>
+          </Form>
+
+        </Spin>
       </div>
     );
   }

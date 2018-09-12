@@ -2,11 +2,18 @@ import { observable, action } from 'mobx';
 
 class BaseForm {
   @observable value = {}
-  @observable state = {}
+  @observable state = {
+    wait: false
+  }
 
   constructor(fieldArray) {
+    this.fieldArray = fieldArray
+    this.reset()
+  }
+
+  @action reset = () => {
     const self = this
-    fieldArray.map( field => {
+    this.fieldArray.map( field => {
       self.value[field] = ''
       self.state[field] = {
         validateStatus: '',
@@ -14,7 +21,6 @@ class BaseForm {
       }
     } )
   }
-
   @action update = (field, value) => {
     this.value[field] = value
   }
@@ -27,15 +33,24 @@ export class Login extends BaseForm {
   constructor() {
     super( ['email', 'password'] )
   }
-  @action submit = () => {
-    Auth.login(this.value)
+  @action submit = async () => {
+    this.state.wait = true
+    await Auth.login(this.value)
+      .then( r => {this.reset()} )
+      .catch( e => console.log(e) )
+    this.state.wait = false
   }
 }
 export class Signup extends BaseForm {
   constructor() {
     super( ['email', 'password', 'passwordConfirm', 'gender', 'name', 'surname', 'birthdate'] )
   }
-  @action submit = () => {
+  @action submit = async () => {
+    this.state.wait = true
+    await Auth.signup(this.value)
+      .then( r => {this.reset()} )
+      .catch( e => console.log(e) )
+    this.state.wait = false
   }
 }
 

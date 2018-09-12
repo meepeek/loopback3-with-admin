@@ -46,7 +46,7 @@ export default class Signup extends React.Component {
           <FormItem>
             <a className="login-form-forgot" href="">Forgot password</a><br/>
             <Button block type="primary" className="login-form-button" htmlType="submit">
-              Login
+              Sign Up
             </Button><br/>
           </FormItem>
         </Form>
