@@ -1,7 +1,7 @@
 import { observable, action } from 'mobx';
 
 class BaseForm {
-  @observable value = {}
+  @observable data = {}
   @observable state = {
     wait: false
   }
@@ -14,7 +14,7 @@ class BaseForm {
   @action reset = () => {
     const self = this
     this.fieldArray.map( field => {
-      self.value[field] = ''
+      self.data[field] = ''
       self.state[field] = {
         validateStatus: '',
         help: ''
@@ -22,7 +22,7 @@ class BaseForm {
     } )
   }
   @action update = (field, value) => {
-    this.value[field] = value
+    this.data[field] = value
   }
   @action validate = (field) => {}
 }
@@ -35,7 +35,7 @@ export class Login extends BaseForm {
   }
   @action submit = async () => {
     this.state.wait = true
-    await Auth.login(this.value)
+    await Auth.login(this.data)
       .then( r => {this.reset()} )
       .catch( e => console.log(e) )
     this.state.wait = false
@@ -47,7 +47,7 @@ export class Signup extends BaseForm {
   }
   @action submit = async () => {
     this.state.wait = true
-    await Auth.signup(this.value)
+    await Auth.signup(this.data)
       .then( r => {this.reset()} )
       .catch( e => console.log(e) )
     this.state.wait = false

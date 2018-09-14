@@ -5,7 +5,7 @@ const FormItem = Form.Item;
 
 export default (props) => {
   const {label, store, icon, type, field} = props
-  const {state, value, update} = store
+  const {state, data, update} = store
   return (
     <FormItem
       label={label}
@@ -13,7 +13,7 @@ export default (props) => {
       help={state[field].help}
     >
         <Input type={type} prefix={icon ? <Icon type={icon} style={{ color: 'rgba(0,0,0,.25)' }} /> : ''} placeholder={label}
-          value={value[field]}
+          value={data[field]}
           onChange={e => update(field, e.currentTarget.value)}
         />
     </FormItem>

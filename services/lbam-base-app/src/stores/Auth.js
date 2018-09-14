@@ -37,6 +37,8 @@ class Auth {
         const {data} = r
         localStorage.setItem(config.tokenName, data.token)
         this.data.token = data.token
+        this.state.visible = false
+        this.state.showSignup = false
       } )
       .catch( e => {
         throw {message: 'Incorrect username or password'}

@@ -7,7 +7,7 @@ const RadioGroup = Radio.Group;
 
 export default (props) => {
   const {label, store, icon, type, field} = props
-  const {state, value, update} = store
+  const {state, data, update} = store
   return (
     <FormItem
       label={label}
@@ -15,7 +15,7 @@ export default (props) => {
       help={state[field].help}
     >
       <RadioGroup
-        value={value[field]}
+        value={data[field]}
         onChange={e => {update(field, e.target.value)}}
       >
         {props.radioOptions.props.children}

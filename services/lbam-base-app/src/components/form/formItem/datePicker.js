@@ -6,7 +6,7 @@ const FormItem = Form.Item;
 
 export default (props) => {
   const {label, store, icon, type, field} = props
-  const {state, value, update} = store
+  const {state, data, update} = store
   return (
     <FormItem
       label={label}
@@ -14,7 +14,7 @@ export default (props) => {
       help={state[field].help}
     >
       <DatePicker format="D MMM YYYY"
-        value={value[field] ? moment(value[field], "D MMM YYYY") : null}
+        value={data[field] ? moment(data[field], "D MMM YYYY") : null}
         onChange={(dateMoment, dateString) => update(field, dateString)}
       />
     </FormItem>
