@@ -39,11 +39,15 @@
     "dataSource": "db",
     "public": true,
     "options": {
-         "strictObjectIDCoercion": true
+      "strictObjectIDCoercion": true
     }
   },
   "SystemToken": {
     "dataSource": "db",
+    "public": true
+  },
+  "Storage": {
+    "dataSource": "storage",
     "public": true
   }
 }
